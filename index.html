@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Last.fm Widget</title>
+    <link rel="stylesheet" href="tracks.css">
+    <style>
+        body {
+            background: transparent;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <lastfm-tracks 
+        user="fardeen09mir"
+        apikey="048120c6666f3ea0f1b2bf28583f98d1"
+        tracks="10"
+        updates="0"
+        interval="60">
+    </lastfm-tracks>
+
+    <script>
+        class LastFMTracks extends HTMLElement {
+            static get observedAttributes() {
+                return ["user", "apikey", "tracks", "interval", "updates"];
+            }
+            constructor() {
+                super();
+                this.attachShadow({ mode: "open" });
+                this.shadowRoot.innerHTML = `<style>@import "tracks.css";</style><div class="track-list"></div>`;
+            }
+            connectedCallback() {
+                this.user = this.getAttribute("user");
+                this.apikey = this.getAttribute("apikey");
+                this.trackCount = parseInt(this.getAttribute("tracks") || "5");
+                this.updateCount = parseInt(this.getAttribute("updates") || "0");
+                this.interval = parseInt(this.getAttribute("interval") || "60");
+                this.fetchTracks();
+                this.startUpdates();
+            }
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (name === "user") this.user = newValue;
+                if (name === "apikey") this.apikey = newValue;
+                if (name === "tracks") this.trackCount = parseInt(newValue);
+                if (name === "interval") this.interval = parseInt(newValue);
+                if (name === "updates") this.updateCount = parseInt(newValue);
+                this.fetchTracks();
+            }
+            disconnectedCallback() {
+                clearInterval(this.updateTimer);
+            }
+            startUpdates() {
+                if (this.interval > 0) {
+                    let count = 0;
+                    this.updateTimer = setInterval(() => {
+                        if (this.updateCount === 0 || count < this.updateCount) {
+                            this.fetchTracks();
+                            count++;
+                        }
+                    }, this.interval * 1000);
+                }
+            }
+            async fetchTracks() {
+                if (!this.user || !this.apikey) return;
+                const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${this.user}&api_key=${this.apikey}&format=json&limit=${this.trackCount}`;
+                try {
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    this.renderTracks(data.recenttracks.track);
+                } catch (err) {
+                    console.error("Error fetching tracks:", err);
+                }
+            }
+            renderTracks(tracks) {
+                const container = this.shadowRoot.querySelector(".track-list");
+                container.innerHTML = "";
+                tracks.forEach(track => {
+                    const trackDiv = document.createElement("div");
+                    trackDiv.className = "track";
+                    const img = track.image.find(img => img.size === "large")["#text"] || "";
+                    const artist = track.artist["#text"];
+                    const name = track.name;
+                    const album = track.album["#text"];
+                    const nowPlaying = track["@attr"] && track["@attr"].nowplaying;
+                    trackDiv.innerHTML = `
+                        <img src="${img}" alt="${artist}">
+                        <div class="track-info">
+                            <div class="track-name">${name}</div>
+                            <div class="track-artist">${artist}</div>
+                            <div class="track-album">${album}</div>
+                            ${nowPlaying ? '<div class="now-playing">Now Playing</div>' : ""}
+                        </div>
+                    `;
+                    container.appendChild(trackDiv);
+                });
+            }
+        }
+        customElements.define("lastfm-tracks", LastFMTracks);
+    </script>
+</body>
+</html>
