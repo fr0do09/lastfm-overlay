@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: transparent; /* keep it overlay-friendly */
+}
+
+.now-playing-bar {
+  position: relative;
+  width: 400px; /* adjust to your overlay size */
+  height: 50px;
+  margin: 20px auto;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  border-radius: 25px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.scroll-text {
+  white-space: nowrap;
+  display: inline-block;
+  font-size: 18px;
+  color: #fff;
+  animation: scroll-text 10s linear infinite;
+}
+
+.now-playing-bar::before,
+.now-playing-bar::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 100%;
+  top: 0;
+  z-index: 2;
+}
+
+.now-playing-bar::before {
+  left: 0;
+  background: linear-gradient(to right, #000000, transparent);
+}
+
+.now-playing-bar::after {
+  right: 0;
+  background: linear-gradient(to left, #000000, transparent);
+}
+
+@keyframes scroll-text {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
