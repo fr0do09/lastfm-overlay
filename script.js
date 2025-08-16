@@ -1,55 +1,67 @@
-const API_KEY = "048120c6666f3ea0f1b2bf28583f98d1";
-const USERNAME = "fardeen09mir";
-const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${USERNAME}&api_key=${API_KEY}&format=json&limit=1`;
-
-let visualizerInterval;
+const apiKey = "048120c6666f3ea0f1b2bf28583f98d1";
+const username = "fardeen09mir";
 
 async function fetchNowPlaying() {
+  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&api_key=${apiKey}&format=json&limit=1`;
+
   try {
-    const response = await fetch(URL);
+    const response = await fetch(url);
     const data = await response.json();
-    const track = data.recenttracks.track[0];
 
-    const trackArt = track.image.find(img => img.size === "medium")["#text"];
-    const trackName = track.name;
-    const artistName = track.artist["#text"];
-    const isNowPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
+    if (data.recenttracks && data.recenttracks.track.length > 0) {
+      const track = data.recenttracks.track[0];
 
-    // Update UI
-    document.getElementById("track-art").src = trackArt || "https://via.placeholder.com/60";
-    document.getElementById("track-name").textContent = trackName;
-    document.getElementById("artist-name").textContent = artistName;
+      const trackName = track.name || "Unknown Track";
+      const artistName = track.artist["#text"] || "Unknown Artist";
+      const albumArt = track.image?.[2]["#text"] || "";
 
-    const visualizer = document.querySelector(".visualizer");
+      document.getElementById("track-name").textContent = trackName;
+      document.getElementById("artist-name").textContent = artistName;
+      document.getElementById("track-art").src = albumArt;
 
-    if (isNowPlaying) {
-      visualizer.classList.add("playing");
-      visualizer.classList.remove("paused");
+      // Apply marquee if overflowing
+      applyMarquee(document.getElementById("track-name"));
+      applyMarquee(document.getElementById("artist-name"));
 
-      // Start random bar movement
-      if (!visualizerInterval) {
-        visualizerInterval = setInterval(() => {
-          document.querySelectorAll(".bar").forEach(bar => {
-            const randomHeight = Math.floor(Math.random() * 25) + 5; // 5px–30px
-            bar.style.height = randomHeight + "px";
-          });
-        }, 200);
-      }
-    } else {
-      visualizer.classList.add("paused");
-      visualizer.classList.remove("playing");
-
-      // Reset bars
-      clearInterval(visualizerInterval);
-      visualizerInterval = null;
-      document.querySelectorAll(".bar").forEach(bar => {
-        bar.style.height = "6px";
-      });
+      // Animate visualizer if playing
+      const isPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
+      toggleVisualizer(isPlaying);
     }
-  } catch (error) {
-    console.error("Error fetching Last.fm data:", error);
+  } catch (err) {
+    console.error("Error fetching track:", err);
   }
 }
 
+function applyMarquee(element) {
+  element.classList.remove("marquee");
+  if (element.scrollWidth > element.clientWidth) {
+    element.classList.add("marquee");
+  }
+}
+
+function toggleVisualizer(isPlaying) {
+  const visualizer = document.querySelector(".visualizer");
+  if (!visualizer) return;
+
+  if (isPlaying) {
+    visualizer.classList.remove("paused");
+    animateVisualizer();
+  } else {
+    visualizer.classList.add("paused");
+  }
+}
+
+function animateVisualizer() {
+  const bars = document.querySelectorAll(".bar");
+  bars.forEach(bar => {
+    const height = Math.random() * 40 + 6;
+    bar.style.height = `${height}px`;
+  });
+  if (!document.querySelector(".visualizer").classList.contains("paused")) {
+    setTimeout(animateVisualizer, 200);
+  }
+}
+
+// Fetch on load + refresh every 15s
 fetchNowPlaying();
-setInterval(fetchNowPlaying, 30000);
+setInterval(fetchNowPlaying, 15000);
