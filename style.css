@@ -1,17 +1,9 @@
-body {
-  font-family: "Arial", sans-serif;
-  background-color: #000;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
-
 #now-playing-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #000, #111);
-  padding: 10px 15px;
+  padding: 0 15px 0 0; /* remove left padding so art touches edge */
   border-radius: 12px;
   width: 400px;
   height: 80px;
@@ -21,11 +13,11 @@ body {
   overflow: hidden;
 }
 
-/* Album Art */
+/* Album Art flush with edge */
 #track-art {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px 0 0 12px; /* match box curve on left */
   flex-shrink: 0;
 }
 
@@ -43,54 +35,34 @@ body {
 
 #track-name {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 20px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 #artist-name {
-  font-size: 14px;
+  font-size: 16px;
   color: #ff69b4;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Marquee only if applied */
+/* Marquee seamless scroll */
+.marquee-wrapper {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
 .marquee {
   display: inline-block;
-  padding-right: 20px;
-  animation: marquee 10s linear infinite;
+  padding-right: 40px;
+  animation: marquee 12s linear infinite;
 }
 
 @keyframes marquee {
   0% { transform: translateX(0%); }
-  10% { transform: translateX(0%); }
-  90% { transform: translateX(-100%); }
   100% { transform: translateX(-100%); }
-}
-
-/* Visualizer */
-.visualizer {
-  display: flex;
-  align-items: flex-end;
-  height: 40px;
-  gap: 3px;
-  margin-left: 10px;
-}
-
-.bar {
-  width: 5px;
-  background: #ff1493;
-  height: 6px;
-  border-radius: 3px;
-  transition: height 0.2s ease;
-}
-
-/* Paused state */
-.visualizer.paused .bar {
-  background: #333;
-  height: 6px;
 }
