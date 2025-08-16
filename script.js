@@ -33,9 +33,28 @@ async function fetchNowPlaying() {
 }
 
 function applyMarquee(element) {
-  element.classList.remove("marquee");
+  // Reset
+  const wrapper = element.parentElement;
+  if (wrapper && wrapper.classList.contains("marquee-wrapper")) {
+    element.classList.remove("marquee");
+    const clone = wrapper.querySelector(".clone");
+    if (clone) clone.remove();
+  }
+
   if (element.scrollWidth > element.clientWidth) {
+    // Wrap inside a marquee wrapper
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("marquee-wrapper");
+    element.parentNode.replaceChild(wrapper, element);
+    wrapper.appendChild(element);
+
+    // Apply marquee class
     element.classList.add("marquee");
+
+    // Clone text for seamless loop
+    const clone = element.cloneNode(true);
+    clone.classList.add("clone");
+    wrapper.appendChild(clone);
   }
 }
 
