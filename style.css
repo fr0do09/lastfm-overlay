@@ -26,24 +26,36 @@
   margin: 0 5px;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* Track text */
-.track-text {
+/* Song title */
+.track-title {
   font-family: 'Arial', sans-serif;
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Artist name */
+.track-artist {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff69b4; /* pink */
+  white-space: nowrap;
+  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Scrolling text if overflowing */
-.track-text.scrolling {
+.track-title.scrolling, .track-artist.scrolling {
   animation: scrollText 10s linear infinite;
 }
 
