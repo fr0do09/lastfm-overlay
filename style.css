@@ -1,16 +1,14 @@
 #now-playing-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background: linear-gradient(90deg, #000, #111);
-  padding: 0 15px 0 0; /* remove left padding so art touches edge */
   border-radius: 12px;
   width: 400px;
   height: 80px;
-  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.4);
+  padding: 0;
   gap: 12px;
-  box-sizing: border-box;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Album Art flush with edge */
