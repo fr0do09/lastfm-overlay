@@ -11,15 +11,26 @@ async function fetchNowPlaying() {
     const trackArt = track.image.find(img => img.size === "medium")["#text"];
     const trackName = track.name;
     const artistName = track.artist["#text"];
+    const isNowPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
 
+    // Update UI
     document.getElementById("track-art").src = trackArt || "https://via.placeholder.com/60";
     document.getElementById("track-name").textContent = trackName;
     document.getElementById("artist-name").textContent = artistName;
+
+    // Visualizer state
+    const visualizer = document.querySelector(".visualizer");
+    if (isNowPlaying) {
+      visualizer.classList.add("playing");
+      visualizer.classList.remove("paused");
+    } else {
+      visualizer.classList.add("paused");
+      visualizer.classList.remove("playing");
+    }
   } catch (error) {
     console.error("Error fetching Last.fm data:", error);
   }
 }
 
-// Initial fetch and refresh every 30 seconds
 fetchNowPlaying();
 setInterval(fetchNowPlaying, 30000);
