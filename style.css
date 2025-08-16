@@ -15,7 +15,7 @@ body {
   border-radius: 12px;
   width: 400px;
   height: 80px;
-  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.4); /* pink glow */
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.4);
   gap: 12px;
   box-sizing: border-box;
   overflow: hidden;
@@ -44,19 +44,35 @@ body {
 
 #track-name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px; /* bigger */
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  animation: marquee 10s linear infinite; /* scrolling if too long */
 }
 
 #artist-name {
-  font-size: 12px;
-  color: #ff69b4; /* pink */
+  font-size: 14px; /* bigger */
+  color: #ff69b4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  animation: marquee 12s linear infinite;
+}
+
+/* Marquee effect */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  20% { transform: translateX(0%); } /* pause at start */
+  80% { transform: translateX(-100%); } 
+  100% { transform: translateX(-100%); }
+}
+
+/* Ensure smooth scrolling inside container */
+#track-info div {
+  display: inline-block;
+  padding-right: 20px; /* spacing before repeat */
 }
 
 /* Visualizer */
@@ -70,9 +86,9 @@ body {
 
 .bar {
   width: 5px;
-  background: #ff1493; /* deep pink */
+  background: #ff1493;
   height: 6px;
-  border-radius: 3px; /* rounded for smoother branding */
+  border-radius: 3px;
   transition: height 0.2s ease;
 }
 
