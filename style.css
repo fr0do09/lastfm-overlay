@@ -1,79 +1,61 @@
+/* Container for the whole widget */
 #now-playing-bar {
   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #000, #111);
+  background: linear-gradient(90deg, #000000, #111111);
   border-radius: 12px;
   width: 400px;
   height: 80px;
   padding: 0;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* Album Art flush with edge */
-#track-art {
+/* Album art */
+.album-art {
   width: 80px;
   height: 80px;
-  border-radius: 12px 0 0 12px; /* match box curve on left */
+  object-fit: cover;
+  border-radius: 0;
   flex-shrink: 0;
 }
 
-/* Text info */
-#track-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  flex-grow: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-#track-name {
+/* Track text */
+.track-text {
+  font-family: 'Arial', sans-serif;
+  font-size: 18px;
   font-weight: bold;
-  font-size: 20px;
-  color: #fff;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  margin: 0 5px;
 }
 
-#artist-name {
-  font-size: 16px;
-  color: #ff69b4;
-  white-space: nowrap;
-  overflow: hidden;
+/* Scrolling text if overflowing */
+.track-text.scrolling {
+  animation: scrollText 10s linear infinite;
 }
 
-/* Marquee seamless scroll */
-.marquee-wrapper {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-}
-
-.marquee {
-  display: inline-block;
-  padding-right: 40px;
-  animation: marquee 12s linear infinite;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0%); }
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
 }
 
+/* Visualizer bar container */
 .visualizer {
   display: flex;
   align-items: flex-end;
-  gap: 4px;
-  width: 80px; /* fixed width */
-  height: 40px; /* bar height inside box */
-  flex-shrink: 0; /* prevent shrinking */
+  gap: 3px;
+  width: 60px;
+  height: 40px;
+  flex-shrink: 0;
+  margin-right: 4px; /* minimal space from right edge */
 }
 
+/* Individual bars */
 .visualizer .bar {
   width: 6px;
   height: 100%;
@@ -90,4 +72,10 @@
 @keyframes bounce {
   0%, 100% { height: 30%; }
   50% { height: 100%; }
+}
+
+/* Optional: smooth text rendering to reduce blur */
+.track-text {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
