@@ -36,7 +36,6 @@ body {
   justify-content: center;
   overflow: hidden;
   flex-grow: 1;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -44,35 +43,33 @@ body {
 
 #track-name {
   font-weight: bold;
-  font-size: 16px; /* bigger */
+  font-size: 16px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  animation: marquee 10s linear infinite; /* scrolling if too long */
 }
 
 #artist-name {
-  font-size: 14px; /* bigger */
+  font-size: 14px;
   color: #ff69b4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  animation: marquee 12s linear infinite;
 }
 
-/* Marquee effect */
+/* Marquee only if applied */
+.marquee {
+  display: inline-block;
+  padding-right: 20px;
+  animation: marquee 10s linear infinite;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
-  20% { transform: translateX(0%); } /* pause at start */
-  80% { transform: translateX(-100%); } 
+  10% { transform: translateX(0%); }
+  90% { transform: translateX(-100%); }
   100% { transform: translateX(-100%); }
-}
-
-/* Ensure smooth scrolling inside container */
-#track-info div {
-  display: inline-block;
-  padding-right: 20px; /* spacing before repeat */
 }
 
 /* Visualizer */
