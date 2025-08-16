@@ -17,7 +17,6 @@
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 0;
   flex-shrink: 0;
 }
 
@@ -67,7 +66,7 @@
 /* Individual bars */
 .visualizer .bar {
   width: 6px;
-  height: 100%;
+  height: 30%;
   background: #ff69b4; /* pink bars */
   animation: bounce 1s infinite ease-in-out;
 }
